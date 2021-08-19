@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Form, Row, Col, Button, Container } from "react-bootstrap";
-const SubjectEntry = () => {
+
+const Enrollment = () => {
     const [subject, setSubject] = useState({});
     const setField = (field, value) => {
         setSubject({ ...subject, [field]: value });
@@ -11,7 +12,7 @@ const SubjectEntry = () => {
     };
     return (
         <Container>
-            <h1>Subject Entry</h1>
+            <h1>Student Enrollment</h1>
             <Form name="SubjectEntry" onSubmit={onSubmit}>
                 <Row>
                     <Form.Group as={Row} className="mb-3" controlId="text">
@@ -19,13 +20,17 @@ const SubjectEntry = () => {
                             Subject Name
                         </Form.Label>
                         <Col sm="9">
-                            <Form.Control
-                                type="text"
-                                placeholder="Subject Name"
+                            <Form.Select
+                                aria-label="Default select example"
                                 onChange={(e) =>
                                     setField("name", e.target.value)
                                 }
-                            />
+                            >
+                                <option>Select Student</option>
+                                <option value="1">One</option>
+                                <option value="2">Two</option>
+                                <option value="3">Three</option>
+                            </Form.Select>
                         </Col>
                     </Form.Group>
                 </Row>
@@ -37,4 +42,4 @@ const SubjectEntry = () => {
     );
 };
 
-export default SubjectEntry;
+export default Enrollment;

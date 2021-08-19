@@ -12,8 +12,8 @@ const {
 
 const StudentType = new GraphQLObjectType({
     name: "Student",
-    fields: () => ({
-        
+    fields: () => ({    
+        id: {type: GraphQLString},    
         name: { type: GraphQLString },
         email: { type: GraphQLString },
         phone: { type: GraphQLString },
@@ -31,9 +31,9 @@ const RootQuery = new GraphQLObjectType({
             },
         },
         students: {
-            type: new GraphQLList(StudentType),
-            args: { id: { type: GraphQLID } },
-            resolve(parent, args) {
+            type: new GraphQLList(StudentType), // output
+            args: { id: { type: GraphQLID } }, // input
+            resolve: (parent, args) => {
                 if (!args.id) {
                     return Student.find({});
                 }
@@ -55,6 +55,7 @@ const Mutation = new GraphQLObjectType({
                 dateOfBirth: { type: new GraphQLNonNull(GraphQLString) },
             },
             resolve(parent, args) {
+                console.log(args);
                 let student = new Student({
                     name: args.name,
                     email: args.email,
@@ -63,7 +64,7 @@ const Mutation = new GraphQLObjectType({
                 });
                 return student.save();
             },
-        },
+        },        
     },
 });
 
@@ -99,3 +100,9 @@ module.exports = new GraphQLSchema({
 // };
 
 // module.exports = { schema , root };
+
+/**
+ *  db.enrollments.find({subjectId: params.subjectId});
+ *  
+ * 
+ */
