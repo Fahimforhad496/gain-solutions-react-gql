@@ -39,10 +39,8 @@ const EnrollmentType = new GraphQLObjectType({
         studentId: { type: GraphQLString },
         studentName: { type: GraphQLString },
         subjectName: { type: GraphQLString },
-        subjectId: { type: GraphQLString }
-        
-    })
-
+        subjectId: { type: GraphQLString },
+    }),
 });
 
 const RootQuery = new GraphQLObjectType({
@@ -68,14 +66,28 @@ const RootQuery = new GraphQLObjectType({
             type: new GraphQLList(SubjectType), // output
             resolve: (parent, args) => {
                 return Subject.find({});
-            }
+            },
         },
         enrollments: {
             type: new GraphQLList(EnrollmentType), // output
             resolve: (parent, args) => {
                 return Enrollment.find({});
-            }
-        }
+            },
+        },
+        enrollmentBySubject: {
+            type: new GraphQLList(EnrollmentType), // output
+            args: { subjectName: { type: GraphQLString } }, // input
+            resolve: (parent, args) => {
+                return Enrollment.find({ subjectName: args.subjectName });
+            },
+        },
+        enrollmentByStudent: {
+            type: new GraphQLList(EnrollmentType), // output
+            args: { studentName: { type: GraphQLString } }, // input
+            resolve: (parent, args) => {
+                return Enrollment.find({ studentName: args.studentName });
+            },
+        },
     },
 });
 
@@ -104,7 +116,7 @@ const Mutation = new GraphQLObjectType({
         addSubject: {
             type: SubjectType,
             args: {
-                name: { type: new GraphQLNonNull(GraphQLString) }
+                name: { type: new GraphQLNonNull(GraphQLString) },
             },
             resolve(parent, args) {
                 let subject = new Subject({
@@ -115,7 +127,7 @@ const Mutation = new GraphQLObjectType({
         },
         addEnrollment: {
             type: EnrollmentType,
-            args: { 
+            args: {
                 studentId: { type: new GraphQLNonNull(GraphQLString) },
                 studentName: { type: new GraphQLNonNull(GraphQLString) },
                 subjectId: { type: new GraphQLNonNull(GraphQLString) },
@@ -129,8 +141,8 @@ const Mutation = new GraphQLObjectType({
                     subjectName: args.subjectName,
                 });
                 return enrollment.save();
-            }
-        }
+            },
+        },
     },
 });
 

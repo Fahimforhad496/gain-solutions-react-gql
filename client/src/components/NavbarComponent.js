@@ -5,7 +5,7 @@ import Home from "./Home";
 import StudentEntry from "./StudentEntry";
 import StudentList from "./StudentList";
 import SubjectEntry from "./SubjectEntry";
-import Enrollment from "./Enrollment";
+import Enrollment from "./EnrollmentList";
 const NavbarComp = () => {
     return (
         <Router>
@@ -31,6 +31,9 @@ const NavbarComp = () => {
                             <Nav.Link as={Link} to={"/enrollment"}>
                                 Enrollment
                             </Nav.Link>
+                            <Nav.Link as={Link} to={"/enrollment-list"}>
+                                Enrollment List
+                            </Nav.Link>
                         </Nav>
                     </Container>
                 </Navbar>
@@ -50,6 +53,9 @@ const NavbarComp = () => {
                         <SubjectEntry />
                     </Route>
                     <Route path="/enrollment">
+                        <Enrollment />
+                    </Route>
+                    <Route path="/enrollment-list">
                         <Enrollment />
                     </Route>
                 </Switch>
