@@ -2,24 +2,23 @@ import React, { useEffect, useState } from "react";
 import { Table, Container } from "react-bootstrap";
 import { request, gql } from "graphql-request";
 
-
 const StudentList = () => {
-
     const [students, setStudents] = useState([]);
     useEffect(() => {
         const query = gql`
-        {
-            students{
-              id
-              name
-              email
-              phone
-              dateOfBirth
+            {
+                students {
+                    id
+                    name
+                    email
+                    phone
+                    dateOfBirth
+                }
             }
-          }
         `;
-        request('http://localhost:8000/graphql', query).then((data) => setStudents(data.students));
-
+        request("http://localhost:8000/graphql", query).then((data) =>
+            setStudents(data.students)
+        );
     }, []);
 
     return (

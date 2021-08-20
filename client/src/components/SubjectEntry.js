@@ -1,14 +1,24 @@
 import React, { useState } from "react";
 import { Form, Row, Col, Button, Container } from "react-bootstrap";
+import { request, gql } from "graphql-request";
 const SubjectEntry = () => {
-    const [subject, setSubject] = useState({});
+    const [form, setForm] = useState({});
     const setField = (field, value) => {
-        setSubject({ ...subject, [field]: value });
+        setForm({ ...form, [field]: value });
     };
+
     const onSubmit = (e) => {
         e.preventDefault();
-        console.log("onSubmit", subject);
+        const mutation = gql`
+            mutation addSubject($name: String!) {
+                addSubject(name: $name) {
+                    id
+                }
+            }
+        `;
+        request("http://localhost:8000/graphql",mutation,{"name": `${form.name}`}).then((data) => console.log(data));
     };
+
     return (
         <Container>
             <h1>Subject Entry</h1>

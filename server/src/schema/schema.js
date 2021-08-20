@@ -1,6 +1,8 @@
 const graphql = require("graphql");
 const _ = require("lodash");
 const Student = require("../models-gql/student");
+const Subject = require("../models-gql/subject");
+
 const {
     GraphQLObjectType,
     GraphQLString,
@@ -12,12 +14,20 @@ const {
 
 const StudentType = new GraphQLObjectType({
     name: "Student",
-    fields: () => ({    
-        id: {type: GraphQLString},    
+    fields: () => ({
+        id: { type: GraphQLString },
         name: { type: GraphQLString },
         email: { type: GraphQLString },
         phone: { type: GraphQLString },
         dateOfBirth: { type: GraphQLString },
+    }),
+});
+
+const SubjectType = new GraphQLObjectType({
+    name: "Subject",
+    fields: () => ({
+        id: { type: GraphQLString },
+        name: { type: GraphQLString },
     }),
 });
 
@@ -40,6 +50,12 @@ const RootQuery = new GraphQLObjectType({
                 return Student.find({ _id: args.id });
             },
         },
+        subjects: {
+            type: new GraphQLList(SubjectType), // output
+            resolve: (parent, args) => {
+                return Subject.find({});
+            }
+        }
     },
 });
 
@@ -64,7 +80,19 @@ const Mutation = new GraphQLObjectType({
                 });
                 return student.save();
             },
-        },        
+        },
+        addSubject: {
+            type: SubjectType,
+            args: {
+                name: { type: new GraphQLNonNull(GraphQLString) }
+            },
+            resolve(parent, args) {
+                let subject = new Subject({
+                    name: args.name,
+                });
+                return subject.save();
+            },
+        },
     },
 });
 
@@ -103,6 +131,6 @@ module.exports = new GraphQLSchema({
 
 /**
  *  db.enrollments.find({subjectId: params.subjectId});
- *  
- * 
+ *
+ *
  */

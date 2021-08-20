@@ -10,7 +10,7 @@ const StudentEntry = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         const mutation = gql`
-            mutation AddStudent (
+            mutation addStudent (
                 $name: String!
                 $email: String!
                 $phone: String!
@@ -29,7 +29,7 @@ const StudentEntry = () => {
         request(
             "http://localhost:8000/graphql",
             mutation, {
-                "name": "test1", "email": "email1", "phone": "phone1", "dateOfBirth": "date1"
+                "name": `${form.name}`, "email": `${form.email}`, "phone": `${form.phone}`, "dateOfBirth": `${form.dateOfBirth}`
             }            
         ).then((data) => console.log(data));
         console.log(form);
@@ -81,6 +81,22 @@ const StudentEntry = () => {
                                 placeholder="Enter Phone Number"
                                 onChange={(e) =>
                                     setField("phone", e.target.value)
+                                }
+                            />
+                        </Col>
+                    </Form.Group>
+                </Row>
+                <Row>
+                    <Form.Group as={Row} className="mb-3" controlId="text">
+                        <Form.Label column sm="3">
+                            Date of Birth
+                        </Form.Label>
+                        <Col sm="9">
+                            <Form.Control
+                                type="text"
+                                placeholder="Date of Birth"
+                                onChange={(e) =>
+                                    setField("dateOfBirth", e.target.value)
                                 }
                             />
                         </Col>

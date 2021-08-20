@@ -1,14 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Row, Col, Button, Container } from "react-bootstrap";
+import { request, gql } from "graphql-request";
 
 const Enrollment = () => {
-    const [subject, setSubject] = useState({});
+    const [data, setData] = useState([]);
+    const [students, setStudent] = useState([]);
     const setField = (field, value) => {
-        setSubject({ ...subject, [field]: value });
+        setStudent({ ...students, [field]: value });
     };
+
+    useEffect(() => {
+        const query = gql`
+            {
+                students {
+                    id
+                    name
+                    email
+                    phone
+                    dateOfBirth
+                }
+            }
+        `;
+        request("http://localhost:8000/graphql", query).then((data) =>
+            setStudent(data.students)
+        );
+    }, []);
     const onSubmit = (e) => {
         e.preventDefault();
-        console.log("onSubmit", subject);
+        console.log("onSubmit", students);
     };
     return (
         <Container>
@@ -26,10 +45,15 @@ const Enrollment = () => {
                                     setField("name", e.target.value)
                                 }
                             >
-                                <option>Select Student</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
+                                {
+                                    students.map((student) => {
+                                        return (
+                                            <option value={student.id}>
+                                                {student.name}
+                                            </option>
+                                        );
+                                    })
+                                }
                             </Form.Select>
                         </Col>
                     </Form.Group>
