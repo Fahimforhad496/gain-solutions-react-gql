@@ -3,7 +3,7 @@ import { Form, Row, Col, Button, Container } from "react-bootstrap";
 import { request, gql } from "graphql-request";
 
 const Enrollment = () => {
-    const [data, setData] = useState([]);
+    
     const [students, setStudent] = useState([]);
     const setField = (field, value) => {
         setStudent({ ...students, [field]: value });

@@ -2,6 +2,7 @@ const graphql = require("graphql");
 const _ = require("lodash");
 const Student = require("../models-gql/student");
 const Subject = require("../models-gql/subject");
+const Enrollment = require("../models-gql/enrollment");
 
 const {
     GraphQLObjectType,
@@ -31,6 +32,19 @@ const SubjectType = new GraphQLObjectType({
     }),
 });
 
+const EnrollmentType = new GraphQLObjectType({
+    name: "Enrollment",
+    fields: () => ({
+        id: { type: GraphQLString },
+        studentId: { type: GraphQLString },
+        studentName: { type: GraphQLString },
+        subjectName: { type: GraphQLString },
+        subjectId: { type: GraphQLString }
+        
+    })
+
+});
+
 const RootQuery = new GraphQLObjectType({
     name: "RootQuery",
     fields: {
@@ -54,6 +68,12 @@ const RootQuery = new GraphQLObjectType({
             type: new GraphQLList(SubjectType), // output
             resolve: (parent, args) => {
                 return Subject.find({});
+            }
+        },
+        enrollments: {
+            type: new GraphQLList(EnrollmentType), // output
+            resolve: (parent, args) => {
+                return Enrollment.find({});
             }
         }
     },
@@ -93,6 +113,24 @@ const Mutation = new GraphQLObjectType({
                 return subject.save();
             },
         },
+        addEnrollment: {
+            type: EnrollmentType,
+            args: { 
+                studentId: { type: new GraphQLNonNull(GraphQLString) },
+                studentName: { type: new GraphQLNonNull(GraphQLString) },
+                subjectId: { type: new GraphQLNonNull(GraphQLString) },
+                subjectName: { type: new GraphQLNonNull(GraphQLString) },
+            },
+            resolve: (parent, args) => {
+                let enrollment = new Enrollment({
+                    studentId: args.studentId,
+                    studentName: args.studentName,
+                    subjectId: args.subjectId,
+                    subjectName: args.subjectName,
+                });
+                return enrollment.save();
+            }
+        }
     },
 });
 
