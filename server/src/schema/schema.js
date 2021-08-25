@@ -7,7 +7,6 @@ const Enrollment = require("../models-gql/enrollment");
 const {
     GraphQLObjectType,
     GraphQLString,
-    GraphQLID,
     GraphQLList,
     GraphQLSchema,
     GraphQLNonNull,
@@ -16,7 +15,7 @@ const {
 const StudentType = new GraphQLObjectType({
     name: "Student",
     fields: () => ({
-        id: { type: GraphQLString },
+        _id: { type: GraphQLString },
         name: { type: GraphQLString },
         email: { type: GraphQLString },
         phone: { type: GraphQLString },
@@ -29,6 +28,26 @@ const SubjectType = new GraphQLObjectType({
     fields: () => ({
         id: { type: GraphQLString },
         name: { type: GraphQLString },
+    }),
+});
+
+const StudentsWithSubjects = new GraphQLObjectType({
+    name: "StudentsWithSubjects",
+    fields: () => ({
+        id: { type: GraphQLString },
+        name: { type: GraphQLString },
+        phone: { type: GraphQLString },
+        email: { type: GraphQLString },
+        dateOfBirth: { type: GraphQLString },
+        subjects: { type: new GraphQLList(EnrollmentType) },
+    }),
+});
+const SubjectsWithStudents = new GraphQLObjectType({
+    name: "SubjectsWithStudents",
+    fields: () => ({
+        id: { type: GraphQLString },
+        name: { type: GraphQLString },
+        students: { type: new GraphQLList(EnrollmentType) },
     }),
 });
 
@@ -54,12 +73,17 @@ const RootQuery = new GraphQLObjectType({
         },
         students: {
             type: new GraphQLList(StudentType), // output
-            args: { id: { type: GraphQLID } }, // input
-            resolve: (parent, args) => {
-                if (!args.id) {
-                    return Student.find({});
-                }
-                return Student.find({ _id: args.id });
+            resolve: async (parent, args) => {
+                let models = await Student.find({});
+                let viewModels = models.map((student) => {
+                    const viewModel = Object.create(student);
+                    const { __v, ...rest } = JSON.parse(
+                        JSON.stringify(viewModel)
+                    );
+                    console.log(rest);
+                    return rest;
+                });
+                return viewModels;
             },
         },
         subjects: {
@@ -74,18 +98,70 @@ const RootQuery = new GraphQLObjectType({
                 return Enrollment.find({});
             },
         },
-        enrollmentBySubject: {
-            type: new GraphQLList(EnrollmentType), // output
-            args: { subjectName: { type: GraphQLString } }, // input
-            resolve: (parent, args) => {
-                return Enrollment.find({ subjectName: args.subjectName });
+        subjectsWithStudents: {
+            type: new GraphQLList(SubjectsWithStudents), // output
+
+            resolve: async (parent, args) => {
+                let model = await Subject.find({});
+                let viewModels = model.map((subject) => {
+                    const viewModel = Object.create(subject);
+                    const { __v, ...rest } = JSON.parse(
+                        JSON.stringify(viewModel)
+                    );
+                    return rest;
+                });
+                console.log("subjectsViewModels", viewModels);
+                let result = viewModels.map(async (subject) => {
+                    let students = await Enrollment.find({
+                        subjectId: subject._id,
+                    });
+                    let viewStudents = students.map((student) => {
+                        const viewModel = Object.create(student);
+                        const { __v, ...rest } = JSON.parse(
+                            JSON.stringify(viewModel)
+                        );
+                        return rest;
+                    });
+                    console.log("studentsViewModels", viewStudents);
+                    subject.students = viewStudents;
+                    return subject;
+                });
+                return result;
             },
         },
-        enrollmentByStudent: {
-            type: new GraphQLList(EnrollmentType), // output
-            args: { studentName: { type: GraphQLString } }, // input
-            resolve: (parent, args) => {
-                return Enrollment.find({ studentName: args.studentName });
+        studentsWithSubjects: {
+            type: new GraphQLList(StudentsWithSubjects), // output
+
+            resolve: async (parent, args) => {
+                let models = await Student.find({});
+                let viewModels = models.map((student) => {
+                    const viewModel = Object.create(student);
+                    const { __v, ...rest } = JSON.parse(
+                        JSON.stringify(viewModel)
+                    );
+                    console.log(rest);
+                    return rest;
+                });
+                console.log("viewModels", viewModels);
+                let result = viewModels.map(async (student) => {
+                    let subjects = await Enrollment.find({
+                        studentId: student._id,
+                    });
+                    let viewSubjects = subjects.map((subject) => {
+                        const viewSubject = Object.create(subject);
+                        const { __v, ...rest } = JSON.parse(
+                            JSON.stringify(viewSubject)
+                        );
+                        console.log(rest);
+                        return rest;
+                    });
+                    student.subjects = viewSubjects;
+                    return student;
+                });
+                // console.log("result", result);
+                //  console.log("models", models);
+
+                return result;
             },
         },
     },

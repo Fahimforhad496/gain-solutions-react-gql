@@ -2,22 +2,27 @@ import React, { useEffect, useState } from "react";
 import { Table, Container } from "react-bootstrap";
 import { request, gql } from "graphql-request";
 
-const StudentList = () => {
-    const [students, setStudents] = useState([]);
+const StudentsWithSubjectsList = () => {
+    const [studentsWithSubjects, setStudentsWithSubjects] = useState([]);
+    const subjects = [studentsWithSubjects.map((s) => s.subjects.map((sub) => sub.subjectName))];
+    console.log("subjects", subjects);
     useEffect(() => {
         const query = gql`
             {
-                students {
-                    _id
+                studentsWithSubjects {
+                    id
                     name
                     email
                     phone
                     dateOfBirth
+                    subjects {
+                        subjectName
+                    }
                 }
             }
         `;
         request("http://localhost:8000/graphql", query).then((data) =>
-            setStudents(data.students)
+            setStudentsWithSubjects(data.studentsWithSubjects)
         );
     }, []);
 
@@ -34,17 +39,24 @@ const StudentList = () => {
                         <th>Email</th>
                         <th>Phone</th>
                         <th>Date of Birth</th>
+                        <th>Subjects</th>
                     </tr>
                 </thead>
-                {students.map((c) => {
+                {studentsWithSubjects.map((c) => {
+                    console.log(c);                                                                                
+                    const elements = c.subjects.map(x => x.subjectName);                                        
+                    const subs = elements.join();
                     return (
                         <tbody>
-                            <tr key={c._id}>
-                                <td>{c._id}</td>
+                            <tr key={c.id}>
+                                <td>{c.id}</td>
                                 <td>{c.name}</td>
                                 <td>{c.email}</td>
                                 <td>{c.phone}</td>
                                 <td>{c.dateOfBirth}</td>
+                                <td>
+                                    {subs}
+                                </td>
                             </tr>
                         </tbody>
                     );
@@ -54,4 +66,4 @@ const StudentList = () => {
     );
 };
 
-export default StudentList;
+export default StudentsWithSubjectsList;
