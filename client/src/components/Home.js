@@ -7,15 +7,15 @@ const Home = () => {
     const [subjects, setSubjects] = useState([]);
     useEffect(() => {
         const query = gql`
-        {
-            subjectsWithStudents {
-                id
-                name
-                students {
-                    studentName
+            {
+                subjectsWithStudents {
+                    id
+                    name
+                    students {
+                        studentName
+                    }
                 }
             }
-        }
         `;
         request("http://localhost:8000/graphql", query).then((data) =>
             setSubjects(data.subjectsWithStudents)
@@ -25,7 +25,7 @@ const Home = () => {
     const countStudent = subjects.map((x) => {
         return x.students.length;
     });
-    console.log(countStudent);
+
     const data = {
         labels: label,
         datasets: [
@@ -59,7 +59,7 @@ const Home = () => {
                 <div className="links"></div>
             </div>
             <Container>
-                <Bar data={data} height={150}  />
+                <Bar data={data} height={150} />
             </Container>
         </>
     );

@@ -1,5 +1,4 @@
 const graphql = require("graphql");
-const _ = require("lodash");
 const Student = require("../models-gql/student");
 const Subject = require("../models-gql/subject");
 const Enrollment = require("../models-gql/enrollment");
@@ -81,7 +80,7 @@ const RootQuery = new GraphQLObjectType({
                     const { __v, ...rest } = JSON.parse(
                         JSON.stringify(viewModel)
                     );
-                    console.log(rest);
+
                     return rest;
                 });
                 return viewModels;
@@ -111,7 +110,7 @@ const RootQuery = new GraphQLObjectType({
                     );
                     return rest;
                 });
-                console.log("subjectsViewModels", viewModels);
+
                 let result = viewModels.map(async (subject) => {
                     let students = await Enrollment.find({
                         subjectId: subject._id,
@@ -123,7 +122,7 @@ const RootQuery = new GraphQLObjectType({
                         );
                         return rest;
                     });
-                    console.log("studentsViewModels", viewStudents);
+
                     subject.students = viewStudents;
                     return subject;
                 });
@@ -140,10 +139,10 @@ const RootQuery = new GraphQLObjectType({
                     const { __v, ...rest } = JSON.parse(
                         JSON.stringify(viewModel)
                     );
-                    console.log(rest);
+
                     return rest;
                 });
-                console.log("viewModels", viewModels);
+
                 let result = viewModels.map(async (student) => {
                     let subjects = await Enrollment.find({
                         studentId: student._id,
@@ -153,14 +152,12 @@ const RootQuery = new GraphQLObjectType({
                         const { __v, ...rest } = JSON.parse(
                             JSON.stringify(viewSubject)
                         );
-                        console.log(rest);
+
                         return rest;
                     });
                     student.subjects = viewSubjects;
                     return student;
                 });
-                // console.log("result", result);
-                //  console.log("models", models);
 
                 return result;
             },
@@ -180,7 +177,6 @@ const Mutation = new GraphQLObjectType({
                 dateOfBirth: { type: new GraphQLNonNull(GraphQLString) },
             },
             resolve(parent, args) {
-                console.log(args);
                 let student = new Student({
                     name: args.name,
                     email: args.email,
@@ -249,7 +245,7 @@ module.exports = new GraphQLSchema({
 //         return "Hello world at " + new Date();
 //     },
 //     addStudent: (s) => {
-//         console.log(s);
+//
 //         return "Hello world at " + new Date();
 //     },
 // };

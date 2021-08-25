@@ -16,7 +16,9 @@ const SubjectEntry = () => {
                 }
             }
         `;
-        request("http://localhost:8000/graphql",mutation,{"name": `${form.name}`}).then((data) => console.log(data));
+        request("http://localhost:8000/graphql", mutation, {
+            name: `${form.name}`,
+        }).then((data) => console.log(data));
     };
 
     return (

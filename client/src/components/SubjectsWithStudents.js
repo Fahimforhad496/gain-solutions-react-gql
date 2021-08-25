@@ -18,7 +18,7 @@ const SubjectsWithStudents = () => {
             }
         `;
 
-        request("http://localhost:8000/graphql", query).then((data) => 
+        request("http://localhost:8000/graphql", query).then((data) =>
             setSubjectsWithStudents(data.subjectsWithStudents)
         );
     }, []);
@@ -36,7 +36,6 @@ const SubjectsWithStudents = () => {
                     </tr>
                 </thead>
                 {subjectsWithStudents.map((c) => {
-                    console.log(c);
                     const elements = c.students.map((x) => x.studentName);
                     const studs = elements.join();
                     return (

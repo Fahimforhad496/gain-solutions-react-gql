@@ -4,12 +4,7 @@ import { request, gql } from "graphql-request";
 
 const StudentsWithSubjectsList = () => {
     const [studentsWithSubjects, setStudentsWithSubjects] = useState([]);
-    const subjects = [
-        studentsWithSubjects.map((s) =>
-            s.subjects.map((sub) => sub.subjectName)
-        ),
-    ];
-    console.log("subjects", subjects);
+
     useEffect(() => {
         const query = gql`
             {
@@ -46,7 +41,6 @@ const StudentsWithSubjectsList = () => {
                     </tr>
                 </thead>
                 {studentsWithSubjects.map((c) => {
-                    console.log(c);
                     const elements = c.subjects.map((x) => x.subjectName);
                     const subs = elements.join();
                     return (

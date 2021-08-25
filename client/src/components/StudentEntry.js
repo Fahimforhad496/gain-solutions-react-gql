@@ -32,7 +32,7 @@ const StudentEntry = () => {
                 "name": `${form.name}`, "email": `${form.email}`, "phone": `${form.phone}`, "dateOfBirth": `${form.dateOfBirth}`
             }            
         ).then((data) => console.log(data));
-        console.log(form);
+        
     };
     return (
         <Container>
