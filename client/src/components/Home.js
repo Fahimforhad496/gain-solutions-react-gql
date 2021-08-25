@@ -7,23 +7,31 @@ const Home = () => {
     const [subjects, setSubjects] = useState([]);
     useEffect(() => {
         const query = gql`
-            {
-                subjects {                    
-                    name
+        {
+            subjectsWithStudents {
+                id
+                name
+                students {
+                    studentName
                 }
             }
+        }
         `;
         request("http://localhost:8000/graphql", query).then((data) =>
-            setSubjects(data.subjects)
+            setSubjects(data.subjectsWithStudents)
         );
     }, []);
-    const label = subjects.map((subject) => subject.name);
+    const label = subjects.map((x) => x.name);
+    const countStudent = subjects.map((x) => {
+        return x.students.length;
+    });
+    console.log(countStudent);
     const data = {
         labels: label,
         datasets: [
             {
                 label: "Number of students in each subject",
-                data: [12, 19, 3, 5, 2, 3, 15],
+                data: countStudent,
                 backgroundColor: [
                     "rgba(255, 99, 132, 0.2)",
                     "rgba(54, 162, 235, 0.2)",

@@ -38,13 +38,13 @@ const SubjectsWithStudents = () => {
                 {subjectsWithStudents.map((c) => {
                     console.log(c);
                     const elements = c.students.map((x) => x.studentName);
-                    const subs = elements.join();
+                    const studs = elements.join();
                     return (
                         <tbody>
                             <tr key={c._id}>
                                 <td>{c.id}</td>
                                 <td>{c.name}</td>
-                                <td>{subs}</td>
+                                <td>{studs}</td>
                             </tr>
                         </tbody>
                     );
