@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Bar } from "react-chartjs-2";
+import { Bar, Pie } from "react-chartjs-2";
 import { Container } from "react-bootstrap";
 import { request, gql } from "graphql-request";
 
@@ -55,11 +55,16 @@ const Home = () => {
     return (
         <>
             <div className="header">
-                <h1 className="title">📊 Bar Chart</h1>
+                <h1 className="title">🥧  Pie Chart</h1>
                 <div className="links"></div>
             </div>
-            <Container>
+            {/* <Container>
                 <Bar data={data} height={150} />
+
+            </Container>
+            <br/> */}
+            <Container>
+                <Pie data={data} height={2} width={2} />
             </Container>
         </>
     );
