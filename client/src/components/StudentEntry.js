@@ -22,7 +22,7 @@ const StudentEntry = () => {
                     phone: $phone
                     dateOfBirth: $dateOfBirth
                 ) {
-                    id
+                    _id
                 }
             }
         `;
@@ -93,7 +93,7 @@ const StudentEntry = () => {
                         </Form.Label>
                         <Col sm="9">
                             <Form.Control
-                                type="text"
+                                type="date"
                                 placeholder="Date of Birth"
                                 onChange={(e) =>
                                     setField("dateOfBirth", e.target.value)

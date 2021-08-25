@@ -5,8 +5,10 @@ import Home from "./Home";
 import StudentEntry from "./StudentEntry";
 import StudentList from "./StudentList";
 import SubjectEntry from "./SubjectEntry";
-import Enrollment from "./EnrollmentList";
+// import Enrollment from "./Enrollment";
+import EnrollmentList from "./EnrollmentList";
 import StudentsWithSubjectsList from "./StudentsWithSubjects";
+import SubjectsWithStudents from "./SubjectsWithStudents"
 const NavbarComp = () => {
     return (
         <Router>
@@ -29,14 +31,17 @@ const NavbarComp = () => {
                             <Nav.Link as={Link} to={"/subject-entry"}>
                                 Subject Entry
                             </Nav.Link>
-                            <Nav.Link as={Link} to={"/enrollment"}>
+                            {/* <Nav.Link as={Link} to={"/enrollment"}>
                                 Enrollment
-                            </Nav.Link>
+                            </Nav.Link> */}
                             <Nav.Link as={Link} to={"/enrollment-list"}>
                                 Enrollment List
                             </Nav.Link>
                             <Nav.Link as={Link} to={"/students-with-subjects"}>
                                 Student With Subjects
+                            </Nav.Link>
+                            <Nav.Link as={Link} to={"/subjects-with-students"}>
+                                Subject With Students
                             </Nav.Link>
                         </Nav>
                     </Container>
@@ -56,14 +61,17 @@ const NavbarComp = () => {
                     <Route path="/subject-entry">
                         <SubjectEntry />
                     </Route>
-                    <Route path="/enrollment">
+                    {/* <Route exact path="/enrollment">
                         <Enrollment />
-                    </Route>
+                    </Route> */}
                     <Route path="/enrollment-list">
-                        <Enrollment />
+                        <EnrollmentList />
                     </Route>
                     <Route path="/students-with-subjects">
                         <StudentsWithSubjectsList />
+                    </Route>
+                    <Route path="/subjects-with-students">
+                        <SubjectsWithStudents />
                     </Route>
                 </Switch>
             </div>

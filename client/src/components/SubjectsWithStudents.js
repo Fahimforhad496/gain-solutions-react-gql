@@ -2,49 +2,49 @@ import React, { useEffect, useState } from "react";
 import { Table, Container } from "react-bootstrap";
 import { request, gql } from "graphql-request";
 
-const StudentList = () => {
-    const [students, setStudents] = useState([]);
+const SubjectsWithStudents = () => {
+    const [subjectsWithStudents, setSubjectsWithStudents] = useState([]);
+
     useEffect(() => {
         const query = gql`
             {
-                students {
-                    _id
+                subjectsWithStudents {
+                    id
                     name
-                    email
-                    phone
-                    dateOfBirth
+                    students {
+                        studentName
+                    }
                 }
             }
         `;
-        request("http://localhost:8000/graphql", query).then((data) =>
-            setStudents(data.students)
+
+        request("http://localhost:8000/graphql", query).then((data) => 
+            setSubjectsWithStudents(data.subjectsWithStudents)
         );
     }, []);
-
     return (
         <Container>
             <div>
-                <h1>Student List</h1>
+                <h1>Subject with Students</h1>
             </div>
             <Table striped bordered hover variant="light">
                 <thead>
                     <tr>
                         <th>#</th>
                         <th>Name</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>Date of Birth</th>
+                        <th>Students</th>
                     </tr>
                 </thead>
-                {students.map((c) => {
+                {subjectsWithStudents.map((c) => {
+                    console.log(c);
+                    const elements = c.students.map((x) => x.studentName);
+                    const subs = elements.join();
                     return (
                         <tbody>
-                            <tr key={"key"}>
-                                <td>{c._id}</td>
+                            <tr key={c._id}>
+                                <td>{c.id}</td>
                                 <td>{c.name}</td>
-                                <td>{c.email}</td>
-                                <td>{c.phone}</td>
-                                <td>{c.dateOfBirth}</td>
+                                <td>{subs}</td>
                             </tr>
                         </tbody>
                     );
@@ -54,4 +54,4 @@ const StudentList = () => {
     );
 };
 
-export default StudentList;
+export default SubjectsWithStudents;

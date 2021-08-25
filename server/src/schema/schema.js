@@ -8,6 +8,7 @@ const {
     GraphQLObjectType,
     GraphQLString,
     GraphQLList,
+    GraphQLID,
     GraphQLSchema,
     GraphQLNonNull,
 } = graphql;
@@ -34,7 +35,7 @@ const SubjectType = new GraphQLObjectType({
 const StudentsWithSubjects = new GraphQLObjectType({
     name: "StudentsWithSubjects",
     fields: () => ({
-        id: { type: GraphQLString },
+        id: { type: GraphQLID },
         name: { type: GraphQLString },
         phone: { type: GraphQLString },
         email: { type: GraphQLString },
